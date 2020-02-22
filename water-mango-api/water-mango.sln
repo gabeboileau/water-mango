@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "water-mango.api", "water-mango-api\water-mango.api.csproj", "{FC115B6A-A43A-4A10-94EB-300DF0E5E465}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "water-mango.contracts", "water-mango.contracts\water-mango.contracts.csproj", "{07AE817A-C081-4B8A-80F2-40BF50874A57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC115B6A-A43A-4A10-94EB-300DF0E5E465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC115B6A-A43A-4A10-94EB-300DF0E5E465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC115B6A-A43A-4A10-94EB-300DF0E5E465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC115B6A-A43A-4A10-94EB-300DF0E5E465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07AE817A-C081-4B8A-80F2-40BF50874A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07AE817A-C081-4B8A-80F2-40BF50874A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07AE817A-C081-4B8A-80F2-40BF50874A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07AE817A-C081-4B8A-80F2-40BF50874A57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6B769C0-CDF0-4DE6-BBD2-B2157AA9D0D6}
+	EndGlobalSection
+EndGlobal
