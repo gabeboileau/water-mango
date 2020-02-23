@@ -16,7 +16,7 @@ namespace water_mango_api.Services
         public const int WATER_TIME = 10;
 
         // Constant value that represents how long the plant needs to rest before being watered in SECONDS.
-        public const int REST_TIME = 30;
+        public const int COOLDOWN_TIME = 30;
 
         // Constant value that represents when the user wants to be alerted about the plant because it hasn't been watered in HOURS.
         public const int PLANT_ALERT_TIME = 6;
@@ -32,7 +32,7 @@ namespace water_mango_api.Services
             var plants = new List<Plant>();
             for (int i = 0; i < amountOfPlants; i++)
             {
-                plants.Add(new Plant(i, "My name is generic : " + i, DateTime.Now));
+                plants.Add(new Plant(i, "Plant Boi # " + i, DateTime.Now));
             }
 
             this.plants = plants;
@@ -75,8 +75,8 @@ namespace water_mango_api.Services
             
             // TODO: The id conter should be generated or handled by the DB
             newPlant.id = plants.Count + 1;
-            newPlant.name = args.Name;
-            newPlant.lastWatered = DateTime.Now;
+            newPlant.Name = args.Name;
+            newPlant.LastWatered = DateTime.Now;
 
             plants.Add(newPlant);
             return newPlant;
@@ -93,11 +93,11 @@ namespace water_mango_api.Services
             // Ensure that the plant is not already being watered.
             if (plant.State.Equals(PlantState.Watering))
             {
-                return new WaterPlantFailed(String.Format("{0} is currently being watered!", plant.name));
+                return new WaterPlantFailed(String.Format("{0} is currently being watered!", plant.Name));
             }
             else if (plant.State.Equals(PlantState.Cooldown))
             {
-                return new WaterPlantFailed(String.Format("{0}  plant has needs to chill for a bit", plant.name));
+                return new WaterPlantFailed(String.Format("{0}  plant has needs to chill for a bit", plant.Name));
             }
 
             // we've validated that the plant exists and it's not currently being watered or on cooldown
@@ -108,14 +108,32 @@ namespace water_mango_api.Services
             return new WaterPlantSuccess(plant);
         }
 
-        private async Task<Plant> WaterPlant(Plant plant)
+        private Plant WaterPlant(Plant plant)
         {
             // watering for 30 seconds 
-            Console.Error.Write("We're watering the plant...");
-            Thread.Sleep(new TimeSpan(0, 0, 30));
-            Console.Error.Write("We're done watering the plant!");
+            Console.Error.WriteLine(String.Format("We're watering the plant {0}.", plant.Name));
+            Thread.Sleep(new TimeSpan(0, 0, WATER_TIME));
+            Console.Error.WriteLine(String.Format("We're done watering the plant {0}!", plant.Name));
+
+            plant.LastWatered = DateTime.Now;
+
+            // start the cooldown
+
+            Task.Run(() => CooldownPlant(plant));
 
             return plant;
         }
+
+        private Plant CooldownPlant(Plant plant)
+        {
+            Console.Error.WriteLine(String.Format("We're coolin' down the plant {0}.", plant.Name));
+            Thread.Sleep(new TimeSpan(0, 0, COOLDOWN_TIME));
+            Console.Error.WriteLine(String.Format("We're done coolin' down the plant {0}!", plant.Name));
+
+            plant.State = PlantState.Idle;
+            return plant;
+        }
+
+
     }
 }
