@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using water_mango.contracts.Models;
 
 namespace water_mango.contracts.DTO
 { 
@@ -21,6 +22,9 @@ namespace water_mango.contracts.DTO
         public string Name { get; set; }
 
         public DateTime LastWatered { get; set; }
+
+        // Normally there would be a separate state enum - but for the sake of keeping it less complex, no. 
+        public PlantState State { get; set; }
     }
 
 }

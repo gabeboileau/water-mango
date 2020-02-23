@@ -15,6 +15,9 @@ namespace water_mango.contracts.Models
 
             // setting the default last watered to now.
             this.lastWatered = lastWatered;
+
+            // when a plant is created by the Lord - it's idle of course.
+            this.State = PlantState.Idle;
         }
 
         public long id { get; set; }
@@ -23,6 +26,7 @@ namespace water_mango.contracts.Models
 
         public DateTime lastWatered { get; set; }
 
+        public PlantState State { get; set; }
 
 
 
