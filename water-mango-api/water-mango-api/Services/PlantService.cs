@@ -87,7 +87,7 @@ namespace water_mango_api.Services
             Plant plant = GetPlantById(args.Id);
             if (plant == null)
             {
-                return new WaterPlantFailed(String.Format("No plant with the Id: {0} was found..", args.Id));
+                return new WaterPlantFailed(String.Format("No plant with the Id: {0} was not found..", args.Id));
             }
 
             // Ensure that the plant is not already being watered.
@@ -97,7 +97,7 @@ namespace water_mango_api.Services
             }
             else if (plant.State.Equals(PlantState.Cooldown))
             {
-                return new WaterPlantFailed(String.Format("{0}  plant has needs to chill for a bit", plant.Name));
+                return new WaterPlantFailed(String.Format("{0} plant needs to chill for a bit", plant.Name));
             }
 
             // we've validated that the plant exists and it's not currently being watered or on cooldown
@@ -118,7 +118,6 @@ namespace water_mango_api.Services
             plant.LastWatered = DateTime.Now;
 
             // start the cooldown
-
             Task.Run(() => CooldownPlant(plant));
 
             return plant;
