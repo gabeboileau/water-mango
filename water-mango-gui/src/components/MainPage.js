@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PlantContainer from "./PlantContainer";
 
-export default class MainPage extends React.Component {
-  render() {
-    return (
-      <div className="MainPage">
-        <img className="PlantHeader" src={"WaterMango-Logo.png"} />
-        <PlantContainer className="PlantContainer"></PlantContainer>
-      </div>
-    );
-  }
+import getAllPlants from "../services/water-mango-api";
+
+function MainPage() {
+  const [plants, setPlants] = useState([]);
+  const [plantContainer, setPlantContainer] = useState();
+
+  useEffect(() => {
+    getAllPlants().then(response => {
+      console.log(response.data);
+      setPlants(response.data);
+    });
+  }, []);
+
+  return (
+    <div className="MainPage">
+      <img className="PlantHeader" src={"WaterMango-Logo.png"} />
+      {createPlantContainer(plants)}
+    </div>
+  );
 }
+
+function createPlantContainer(plants) {
+  return (
+    <PlantContainer className="PlantContainer" plants={plants}></PlantContainer>
+  );
+}
+
+export default MainPage;

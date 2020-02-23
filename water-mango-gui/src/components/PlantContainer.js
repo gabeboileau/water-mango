@@ -1,13 +1,19 @@
 import React from "react";
 import Plant from "./Plant";
 
+function createPlants(plants) {
+  if (plants === undefined) {
+    return <div></div>;
+  }
+  const plantComponents = plants.map(plant => (
+    <Plant key={plant.id} name={plant.name} />
+  ));
+  return plantComponents;
+}
+
 function PlantContainer(props) {
-  return (
-    <div className="PlantContainer">
-      <Plant name="Gabe" canWater="false"></Plant>
-      <Plant name="Christine's Plant"></Plant>
-    </div>
-  );
+  console.log(props);
+  return <div className="PlantContainer">{createPlants(props.plants)}</div>;
 }
 
 export default PlantContainer;
