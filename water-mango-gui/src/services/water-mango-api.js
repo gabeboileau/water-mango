@@ -5,9 +5,19 @@ const instance = axios.create({
   timeout: 1000
 });
 
-function getAllPlants() {
-  const response = instance.get("plant");
+async function getAllPlants() {
+  const response = await instance.get("plant").catch(err => console.warn(err));
   return response;
+}
+
+export async function waterPlant(plantId) {
+  if (plantId !== undefined && plantId >= 0) {
+    // it's valid - le-go
+    const response = await instance.post("plant/water/" + plantId);
+    return response;
+  } else {
+    return [];
+  }
 }
 
 export default getAllPlants;
