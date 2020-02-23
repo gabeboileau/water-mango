@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>water_mango.contracts</RootNamespace>
+    <Version>0.0.1</Version>
+    <Description>Contains all of the contracts necessary to communicate with the API.</Description>
   </PropertyGroup>
 
 </Project>
