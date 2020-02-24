@@ -11,7 +11,11 @@ async function getAllPlants() {
 }
 
 export async function waterPlant(plantId) {
-  if (plantId !== undefined && plantId >= 0) {
+  if (isNaN(plantId)) {
+    return [];
+  }
+
+  if (plantId >= 0) {
     // it's valid - le-go
     const response = await instance.post("plant/water/" + plantId);
     return response;

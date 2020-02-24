@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -8,7 +8,23 @@ import Typography from "@material-ui/core/Typography";
 import plant from "./plant.gif";
 
 function Plant(props) {
-  console.log(props);
+  const [stateColor, setStateColor] = useState();
+  const [canWater, setCanWater] = useState(false);
+
+  // run this once when this component gets mounted
+  useEffect(() => {
+    // set the color of the state
+    const color = getColorForState(props.state);
+    setStateColor(color);
+
+    let canWeWater = false;
+    if (props.state === 0 || props.state === 3) {
+      canWeWater = true;
+    }
+
+    setCanWater(canWeWater);
+  }, []);
+
   return (
     <Card className="Plant">
       <CardContent
@@ -20,17 +36,25 @@ function Plant(props) {
       >
         <Typography>{props.name}</Typography>
         <img style={{ height: "150px" }} src={plant} />
-        <Typography>This is a lovely plant.. it's just so nice.</Typography>
+        <Typography>
+          This is a lovely plant.. Don't water it after midnight...
+        </Typography>
       </CardContent>
       <CardActions>
         <Button
-          disabled={props.canWater}
+          disabled={!canWater}
           size="small"
           onClick={() => props.waterCallback(props.id)}
         >
           Water
         </Button>
-        <label style={{ verticalAlign: "center" }}>
+        <label
+          style={{
+            color: stateColor,
+            verticalAlign: "center",
+            padding: "0 0 5px 0"
+          }}
+        >
           Status: {getNameForState(props.state)}
         </label>
       </CardActions>
@@ -39,11 +63,10 @@ function Plant(props) {
 }
 
 function getNameForState(stateNumber) {
-  console.log(stateNumber);
-  // 1-> Idle,
-  // 2 -> Watering
-  // 3 -> Cooldown
-  // 4 -> ThirstyAF
+  // 0-> Idle,
+  // 1 -> Watering
+  // 2 -> Cooldown
+  // 3 -> ThirstyAF
 
   switch (stateNumber) {
     case 0:
@@ -56,6 +79,21 @@ function getNameForState(stateNumber) {
       return "Thirsty AF";
     default:
       return "Invalid";
+  }
+}
+
+function getColorForState(stateNumber) {
+  switch (stateNumber) {
+    case 0:
+      return "green";
+    case 1:
+      return "blue";
+    case 2:
+      return "grey";
+    case 3:
+      return "red";
+    default:
+      return "magenta";
   }
 }
 

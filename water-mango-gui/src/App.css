@@ -56,14 +56,24 @@
 .PlantContainer {
   display: flex;
   justify-content: center;
-  flex-grow: 1;
+  flex-wrap: wrap;
 }
 
 .Plant {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 275px;
+  width: 250px;
+  min-width: 200px;
   margin: 20px;
   padding: 10px;
+}
+
+.Footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 600px;
+  align-self: center;
+  vertical-align: center;
+  flex-direction: column;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PlantContainer from "./PlantContainer";
+import Footer from "./Footer";
 
 import getAllPlants from "../services/water-mango-api";
 import { waterPlant } from "../services/water-mango-api";
@@ -22,6 +23,7 @@ function MainPage() {
     <div className="MainPage">
       <img className="PlantHeader" src={"WaterMango-Logo.png"} />
       {createPlantContainer(plants)}
+      <Footer />
     </div>
   );
 }
