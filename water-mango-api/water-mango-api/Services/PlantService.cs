@@ -68,7 +68,6 @@ namespace water_mango_api.Services
         /// Creates a new plant with the given arguments.
         /// </summary>
         /// <param name="args"></param>
-        /// <returns></returns>
         public Plant CreatePlant(CreatePlantArguments args)
         {
             Plant newPlant = new Plant();
@@ -116,6 +115,7 @@ namespace water_mango_api.Services
             Console.Error.WriteLine(String.Format("We're done watering the plant {0}!", plant.Name));
 
             plant.LastWatered = DateTime.Now;
+            plant.State = PlantState.Cooldown;
 
             // start the cooldown
             Task.Run(() => CooldownPlant(plant));

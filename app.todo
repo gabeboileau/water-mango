@@ -1,0 +1,19 @@
+water-mango:
+    
+    LookAndFeel:
+        ✔ Add a min width for the cards @done(20-02-24 17:01)
+        ✔ Have the cards wrap with flex @done(20-02-24 17:01)
+        ☐ Display some type of indication that the client has lost connection with the API. 
+        ☐ Display some type of indication that the client has lost connection with the EventsService
+        ☐ Display a color for each type of status
+
+        ☐ Display 
+
+    API:
+        ☐ We need to ensure to refresh our list when we get a response from our requests (water a plant -> refresh plants so we can see the status)
+        ☐ Throw event if we lose connection with the API. 
+
+    Events:
+        ☐ Add connecting to the signalR events on the C# side of things
+        ☐ Ensure we re-connect if the events service is down
+        ☐ Throw event if the Events service is disconnected for any reason
