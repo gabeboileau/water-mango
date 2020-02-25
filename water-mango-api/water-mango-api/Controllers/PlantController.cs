@@ -23,7 +23,6 @@ namespace water_mango_api.Controllers
             this.mapper = mapper;
         }
 
-
         /// <summary>
         /// GET Root endpoint that returns all the plants.
         /// </summary>
@@ -109,6 +108,11 @@ namespace water_mango_api.Controllers
             return Accepted(responseDTO);
         }
 
+        /// <summary>
+        /// POST endpoint that stops watering the plant. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost("stopWatering/{id}")]
         public ActionResult<WaterPlantResponseDTO> StopWateringPlant(long id)
         {

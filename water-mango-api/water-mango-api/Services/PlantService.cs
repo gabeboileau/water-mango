@@ -105,6 +105,11 @@ namespace water_mango_api.Services
             return newPlant;
         }
 
+        /// <summary>
+        /// Stops watering the plant. Will fail if it's already not watering. Also failes if it can't find the plant with the given id.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public WaterPlantResponse StopWateringPlant(StopWateringPlantArguments args)
         {
             Plant plant = GetPlantById(args.Id);
@@ -143,6 +148,12 @@ namespace water_mango_api.Services
             return new WaterPlantFailed(String.Format("Failed to stop watering plant with id {0}", args.Id));
         }
 
+        /// <summary>
+        /// Waters the plant. Throws an error if the plant was not found with the given id.
+        /// Throws an error also if the plant is on cooldown or the plant is already watering.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public WaterPlantResponse WaterPlant(WaterPlantArguments args)
         {
             Plant plant = GetPlantById(args.Id);
@@ -188,6 +199,7 @@ namespace water_mango_api.Services
                 totalTime++;
             }
 
+            // check to see if we've cancelled the token.
             if (token.IsCancellationRequested)
             {
                 // we've canceled
@@ -224,6 +236,11 @@ namespace water_mango_api.Services
             return plant;
         }
 
+        /// <summary>
+        /// Coolsdown the plant with a Thread.sleep and sends out an update.
+        /// </summary>
+        /// <param name="plant"></param>
+        /// <returns></returns>
         private Plant CooldownPlant(Plant plant)
         {
             // cooldown for COOLDOWN_TIME
