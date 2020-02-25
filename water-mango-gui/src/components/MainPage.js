@@ -3,7 +3,7 @@ import PlantContainer from "./PlantContainer";
 import Footer from "./Footer";
 
 import getAllPlants from "../services/water-mango-api";
-import { waterPlant } from "../services/water-mango-api";
+import { waterPlant, stopWateringPlant } from "../services/water-mango-api";
 
 import { connect } from "../services/event-service";
 
@@ -40,6 +40,7 @@ function createPlantContainer(plants) {
     <PlantContainer
       className="PlantContainer"
       waterCallback={waterPlantCallback}
+      stopWateringCallback={stopWateringCallback}
       plants={plants}
     ></PlantContainer>
   );
@@ -47,6 +48,11 @@ function createPlantContainer(plants) {
 
 function waterPlantCallback(plantId) {
   waterPlant(plantId);
+}
+
+function stopWateringCallback(plantId) {
+  console.log("Stop");
+  stopWateringPlant(plantId);
 }
 
 export default MainPage;

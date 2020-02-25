@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,10 +24,17 @@ namespace water_mango_api.Services
         // Constant value that represents when the user wants to be alerted about the plant because it hasn't been watered in HOURS.
         public const int PLANT_ALERT_TIME = 6;
 
+        // the plants list lock
         private readonly object plantLock = new object();
 
         // list of plants in memory until we can get the state going
         private List<Plant> plants;
+
+        // object lock for the task dictionary
+        private readonly object taskLock = new object();
+        
+        // dictionary of a plant id and the task that currently watering it
+        private Dictionary<long, CancellationTokenSource> wateringTasks = new Dictionary<long, CancellationTokenSource>();
 
         // dependencies
         private PlantHub plantHub;
@@ -81,8 +90,50 @@ namespace water_mango_api.Services
             newPlant.Name = args.Name;
             newPlant.LastWatered = DateTime.Now;
 
-            plants.Add(newPlant);
+            lock (plantLock)
+            {
+                plants.Add(newPlant);
+            }
+
             return newPlant;
+        }
+
+        public WaterPlantResponse StopWateringPlant(StopWateringPlantArguments args)
+        {
+            Plant plant = GetPlantById(args.Id);
+            if (plant == null)
+            {
+                return new WaterPlantFailed(String.Format("No plant with the Id: {0} was not found..", args.Id));
+            }
+
+            if (!plant.State.Equals(PlantState.Watering))
+            {
+                // we're not watering. We can't stop.
+                return new WaterPlantFailed(String.Format("The plant with id {0} is not currently being watered. We can't like, idk, not water?..", args.Id));
+            }
+
+            if (wateringTasks.ContainsKey(args.Id))
+            {
+                // there is a task currently running for watering the plant with this id
+                CancellationTokenSource tokenSource = wateringTasks.GetValueOrDefault(args.Id, null);
+                if (tokenSource != null)
+                {
+                    tokenSource.Cancel();
+                    lock (taskLock)
+                    {
+                        // remove this item from the dictionary
+                        wateringTasks.Remove(args.Id);
+                    }
+
+                    return new WaterPlantSuccess(plant);
+                }
+            }
+            else
+            {
+                return new WaterPlantFailed(String.Format("No plant task is currently running with id {0}..", args.Id));
+            }
+
+            return new WaterPlantFailed(String.Format("Failed to stop watering plant with id {0}", args.Id));
         }
 
         public WaterPlantResponse WaterPlant(WaterPlantArguments args)
@@ -109,15 +160,35 @@ namespace water_mango_api.Services
             // send an event to all clients to update the plant with this id
             plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(args.Id));
 
-            Task.Run(() => WaterPlant(plant));
+            var tokenSource = new CancellationTokenSource();
+            var token = tokenSource.Token;
+            Task wateringTask = Task.Run(() => WaterPlant(plant, token), token);
+
+            
+            lock (taskLock)
+            {
+                wateringTasks.Add(plant.Id, tokenSource);
+            }
 
             return new WaterPlantSuccess(plant);
         }
 
-        private Plant WaterPlant(Plant plant)
+        private Plant WaterPlant(Plant plant, CancellationToken token)
         {
-            // watering for WATER_TIME 
-            Thread.Sleep(new TimeSpan(0, 0, WATER_TIME));
+            int totalTime = 0;
+            while(!token.IsCancellationRequested && totalTime < WATER_TIME)
+            {
+                Thread.Sleep(new TimeSpan(0, 0, 1));
+                totalTime++;
+            }
+
+            if (token.IsCancellationRequested)
+            {
+                // we've canceled
+                plant.State = PlantState.Idle;
+                plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(plant.Id));
+                return plant;
+            }
 
             plant.LastWatered = DateTime.Now;
             plant.State = PlantState.Cooldown;
@@ -127,6 +198,12 @@ namespace water_mango_api.Services
 
             // start the cooldown
             Task.Run(() => CooldownPlant(plant));
+
+            // we're done watering - so remove this task from the list
+            lock (taskLock)
+            {
+                wateringTasks.Remove(plant.Id);
+            }
 
             return plant;
         }
@@ -143,7 +220,5 @@ namespace water_mango_api.Services
 
             return plant;
         }
-
-
     }
 }

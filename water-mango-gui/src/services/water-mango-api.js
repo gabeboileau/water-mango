@@ -24,4 +24,17 @@ export async function waterPlant(plantId) {
   }
 }
 
+export async function stopWateringPlant(plantId) {
+  if (isNaN(plantId)) {
+    return [];
+  }
+
+  if (plantId >= 0) {
+    const response = await instance.post("/plant/stopWatering/" + plantId);
+    return response;
+  } else {
+    return [];
+  }
+}
+
 export default getAllPlants;

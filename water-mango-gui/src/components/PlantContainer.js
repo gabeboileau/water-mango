@@ -1,7 +1,7 @@
 import React from "react";
 import Plant from "./Plant";
 
-function createPlants(plants, waterCallback) {
+function createPlants(plants, waterCallback, stopWateringCallback) {
   if (plants === undefined) {
     return <div></div>;
   }
@@ -12,6 +12,7 @@ function createPlants(plants, waterCallback) {
       name={plant.name}
       state={plant.state}
       waterCallback={waterCallback}
+      stopWateringCallback={stopWateringCallback}
     />
   ));
   return plantComponents;
@@ -20,7 +21,11 @@ function createPlants(plants, waterCallback) {
 function PlantContainer(props) {
   return (
     <div className="PlantContainer">
-      {createPlants(props.plants, props.waterCallback)}
+      {createPlants(
+        props.plants,
+        props.waterCallback,
+        props.stopWateringCallback
+      )}
     </div>
   );
 }

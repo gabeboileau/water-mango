@@ -10,6 +10,8 @@ import plant from "./plant.gif";
 function Plant(props) {
   const [stateColor, setStateColor] = useState();
   const [canWater, setCanWater] = useState(false);
+  const [canStopWatering, setCanStopWatering] = useState(false);
+  const [actionName, setActionName] = useState("Water");
 
   // run this once when this component gets mounted
   useEffect(() => {
@@ -23,6 +25,15 @@ function Plant(props) {
     }
 
     setCanWater(canWeWater);
+    setActionName("Water");
+
+    let stopWatering = false;
+    if (props.state === 1) {
+      // we're watering
+      stopWatering = true;
+      setActionName("Stop");
+    }
+    setCanStopWatering(stopWatering);
   }, [props.state]);
 
   return (
@@ -42,11 +53,15 @@ function Plant(props) {
       </CardContent>
       <CardActions>
         <Button
-          disabled={!canWater}
+          disabled={!canWater && !canStopWatering}
           size="small"
-          onClick={() => props.waterCallback(props.id)}
+          onClick={() =>
+            canStopWatering
+              ? props.stopWateringCallback(props.id)
+              : props.waterCallback(props.id)
+          }
         >
-          Water
+          {actionName}
         </Button>
         <label
           style={{

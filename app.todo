@@ -5,15 +5,15 @@ water-mango:
         ✔ Have the cards wrap with flex @done(20-02-24 17:01)
         ☐ Display some type of indication that the client has lost connection with the API. 
         ☐ Display some type of indication that the client has lost connection with the EventsService
-        ☐ Display a color for each type of status
-
-        ☐ Display 
+        ✔ Display a color for each type of status @done(20-02-25 11:14)
 
     API:
-        ☐ We need to ensure to refresh our list when we get a response from our requests (water a plant -> refresh plants so we can see the status)
-        ☐ Throw event if we lose connection with the API. 
+        ✘ We need to ensure to refresh our list when we get a response from our requests (water a plant -> refresh plants so we can see the status) @cancelled(20-02-25 11:14)
+            ✔ Instead we're refreshing from update events alone. @done(20-02-25 11:14)
+        ☐ Create a timer for for when a plant hasn't been watered for 6 hours.
+        ☐ The user must be able to stop watering
 
     Events:
-        ☐ Add connecting to the signalR events on the C# side of things
-        ☐ Ensure we re-connect if the events service is down
+        ✔ Add connecting to the signalR events on the C# side of things @done(20-02-25 11:15)
+        ✔ Ensure we re-connect if the events service is down @done(20-02-25 11:15)
         ☐ Throw event if the Events service is disconnected for any reason

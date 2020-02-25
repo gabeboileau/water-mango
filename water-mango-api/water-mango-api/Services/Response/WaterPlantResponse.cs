@@ -18,6 +18,6 @@ namespace water_mango_api.Services.Response
         
         public string ErrorMessage { get; set; }
 
-        public Plant Result { get; set; }
+        public Plant Plant { get; set; }
     }
 }

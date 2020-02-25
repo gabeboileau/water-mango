@@ -10,7 +10,7 @@ namespace water_mango_api.Services.Response
     {
         public WaterPlantSuccess(Plant plant) : base(true, "")
         {
-            base.Result = plant;
+            base.Plant = plant;
         }
     }
 }

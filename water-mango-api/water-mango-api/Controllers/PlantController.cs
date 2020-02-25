@@ -86,7 +86,23 @@ namespace water_mango_api.Controllers
             WaterPlantResponse response = service.WaterPlant(new Services.Arguments.WaterPlantArguments(id));
             if (response.Successful)
             {
-                responseDTO.Plant = mapper.Map<PlantDTO>(response.Result);
+                responseDTO.Plant = mapper.Map<PlantDTO>(response.Plant);
+            }
+
+            responseDTO.ErrorMessage = response.ErrorMessage;
+            responseDTO.Successful = response.Successful;
+            return Accepted(responseDTO);
+        }
+
+        [HttpPost("stopWatering/{id}")]
+        public ActionResult<WaterPlantResponseDTO> StopWateringPlant(long id)
+        {
+            WaterPlantResponseDTO responseDTO = new WaterPlantResponseDTO();
+
+            WaterPlantResponse response = service.StopWateringPlant(new Services.Arguments.StopWateringPlantArguments(id));
+            if (response.Successful)
+            {
+                responseDTO.Plant = mapper.Map<PlantDTO>(response.Plant);
             }
 
             responseDTO.ErrorMessage = response.ErrorMessage;
