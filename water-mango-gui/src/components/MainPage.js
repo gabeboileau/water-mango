@@ -15,7 +15,9 @@ function MainPage() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getAllPlants();
-      setPlants(result.data);
+      if (result.data !== undefined) {
+        setPlants(result.data);
+      }
     };
 
     connect(async id => {

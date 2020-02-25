@@ -30,8 +30,14 @@
 - .NET SDK that supports `ASP.NET Core 3.1`
 - `Node.js`
 - `Visual Studio 2019`
+  - NOTE: The `build-run-api.bat` file relies on the path `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\amd64\msbuild.exe` to exist.
 
 ## How to start the application
+
+1. You can start by running the `build-run-api.bat`, provided you have the path above ^.
+   - This will build and run the API in a console
+2. Navigate to the `water-mango-gui` folder and in the console run `npm install` followed by `npm start`.
+3. Profit
 
 ## Things to note:
 

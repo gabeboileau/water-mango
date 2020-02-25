@@ -6,7 +6,11 @@ const instance = axios.create({
 });
 
 async function getAllPlants() {
-  const response = await instance.get("plant").catch(err => console.warn(err));
+  const response = await instance.get("plant").catch(err => {
+    console.warn(err);
+    return [];
+  });
+
   return response;
 }
 
