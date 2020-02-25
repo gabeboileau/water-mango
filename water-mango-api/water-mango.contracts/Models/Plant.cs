@@ -10,7 +10,7 @@ namespace water_mango.contracts.Models
         public Plant() { }
         public Plant(long id, String name, DateTime lastWatered)
         {
-            this.id = id;
+            this.Id = id;
             this.Name = name;
 
             // setting the default last watered to now.
@@ -20,7 +20,7 @@ namespace water_mango.contracts.Models
             this.State = PlantState.Idle;
         }
 
-        public long id { get; set; }
+        public long Id { get; set; }
 
         public String Name { get; set; }
 

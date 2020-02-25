@@ -5,6 +5,8 @@ import Footer from "./Footer";
 import getAllPlants from "../services/water-mango-api";
 import { waterPlant } from "../services/water-mango-api";
 
+import { connect } from "../services/event-service";
+
 function MainPage() {
   const [plants, setPlants] = useState([]);
   const [plantContainer, setPlantContainer] = useState();
@@ -15,6 +17,11 @@ function MainPage() {
       const result = await getAllPlants();
       setPlants(result.data);
     };
+
+    connect(async id => {
+      const result = await getAllPlants();
+      setPlants(result.data);
+    });
 
     fetchData();
   }, []);

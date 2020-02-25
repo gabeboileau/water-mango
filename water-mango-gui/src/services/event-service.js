@@ -1,11 +1,15 @@
-const signalR = require("@aspnet/signalr");
+const signalR = require("@microsoft/signalr");
 
-function connect() {
-  let connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+// connects to the signalr events and passes in a callback for the update event specifically
+export function connect(updateEvent) {
+  let connection = new signalR.HubConnectionBuilder()
+    .withUrl("http://localhost:5000/plantHub")
+    .withAutomaticReconnect()
+    .build();
 
-  connection.on("send", data => {
-    console.log(data);
+  connection.on("updatePlant", data => {
+    updateEvent(data.id);
   });
 
-  connection.start().then(() => connection.invoke("send", "Hello"));
+  connection.start().catch(err => console.log(err));
 }

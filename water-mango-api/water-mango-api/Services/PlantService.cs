@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using water_mango.contracts.Models;
 using water_mango_api.Services.Arguments;
+using water_mango_api.Services.EventServices;
 using water_mango_api.Services.Response;
 
 namespace water_mango_api.Services
@@ -26,17 +27,20 @@ namespace water_mango_api.Services
         // list of plants in memory until we can get the state going
         private List<Plant> plants;
 
-        public PlantService()
+        // dependencies
+        private PlantHub plantHub;
+
+        public PlantService(PlantHub plantHub)
         {
+            this.plantHub = plantHub;
+            
+            this.plants = new List<Plant>();
+
             int amountOfPlants = 5;
-            var plants = new List<Plant>();
             for (int i = 0; i < amountOfPlants; i++)
             {
                 plants.Add(new Plant(i, "Plant Boi # " + i, DateTime.Now));
             }
-
-            this.plants = plants;
-
         }
 
         /// <summary>
@@ -55,7 +59,7 @@ namespace water_mango_api.Services
         {
             foreach (Plant p in plants) 
             {
-                if (p.id == id)
+                if (p.Id == id)
                 {
                     return p;
                 }
@@ -73,7 +77,7 @@ namespace water_mango_api.Services
             Plant newPlant = new Plant();
             
             // TODO: The id conter should be generated or handled by the DB
-            newPlant.id = plants.Count + 1;
+            newPlant.Id = plants.Count + 1;
             newPlant.Name = args.Name;
             newPlant.LastWatered = DateTime.Now;
 
@@ -102,6 +106,9 @@ namespace water_mango_api.Services
             // we've validated that the plant exists and it's not currently being watered or on cooldown
             plant.State = PlantState.Watering;
 
+            // send an event to all clients to update the plant with this id
+            plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(args.Id));
+
             Task.Run(() => WaterPlant(plant));
 
             return new WaterPlantSuccess(plant);
@@ -109,13 +116,14 @@ namespace water_mango_api.Services
 
         private Plant WaterPlant(Plant plant)
         {
-            // watering for 30 seconds 
-            Console.Error.WriteLine(String.Format("We're watering the plant {0}.", plant.Name));
+            // watering for WATER_TIME 
             Thread.Sleep(new TimeSpan(0, 0, WATER_TIME));
-            Console.Error.WriteLine(String.Format("We're done watering the plant {0}!", plant.Name));
 
             plant.LastWatered = DateTime.Now;
             plant.State = PlantState.Cooldown;
+
+            // send an event to all clients to update the plant with this id
+            plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(plant.Id));
 
             // start the cooldown
             Task.Run(() => CooldownPlant(plant));
@@ -125,11 +133,14 @@ namespace water_mango_api.Services
 
         private Plant CooldownPlant(Plant plant)
         {
-            Console.Error.WriteLine(String.Format("We're coolin' down the plant {0}.", plant.Name));
+            // cooldown for COOLDOWN_TIME
             Thread.Sleep(new TimeSpan(0, 0, COOLDOWN_TIME));
-            Console.Error.WriteLine(String.Format("We're done coolin' down the plant {0}!", plant.Name));
 
             plant.State = PlantState.Idle;
+
+            // send an event to all clients to update the plant with this id
+            plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(plant.Id));
+
             return plant;
         }
 

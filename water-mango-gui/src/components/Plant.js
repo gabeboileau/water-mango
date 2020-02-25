@@ -23,7 +23,7 @@ function Plant(props) {
     }
 
     setCanWater(canWeWater);
-  }, []);
+  }, [props.state]);
 
   return (
     <Card className="Plant">
