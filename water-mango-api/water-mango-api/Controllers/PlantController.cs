@@ -6,6 +6,7 @@ using water_mango.contracts.Models;
 using water_mango.contracts.DTO;
 using AutoMapper;
 using water_mango_api.Services.Response;
+using System.Threading;
 
 namespace water_mango_api.Controllers
 {
@@ -82,6 +83,20 @@ namespace water_mango_api.Controllers
         {
             WaterPlantResponseDTO responseDTO = new WaterPlantResponseDTO();
 
+            Console.Error.Write(Thread.CurrentThread);
+            //using (Timer timer = new Timer(new TimerCallback((c) =>
+            //{
+            //    Console.Error.Write("what the fuck");
+            //}), null, 3000, 1000))
+            //{
+
+            //    // Wait for 10 seconds
+            //    Thread.Sleep(10000);
+
+            //    // Then go slow for another 10 seconds
+            //    timer.Change(0, 2000);
+            //    Thread.Sleep(10000);
+            //}
 
             WaterPlantResponse response = service.WaterPlant(new Services.Arguments.WaterPlantArguments(id));
             if (response.Successful)

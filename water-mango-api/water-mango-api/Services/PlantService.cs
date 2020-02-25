@@ -1,9 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using water_mango.contracts.Models;
@@ -32,7 +28,9 @@ namespace water_mango_api.Services
 
         // object lock for the task dictionary
         private readonly object taskLock = new object();
-        
+
+        private Dictionary<long, Timer> needsWateringTimers = new Dictionary<long, Timer>();
+
         // dictionary of a plant id and the task that currently watering it
         private Dictionary<long, CancellationTokenSource> wateringTasks = new Dictionary<long, CancellationTokenSource>();
 
@@ -48,7 +46,16 @@ namespace water_mango_api.Services
             int amountOfPlants = 5;
             for (int i = 0; i < amountOfPlants; i++)
             {
-                plants.Add(new Plant(i, "Plant Boi # " + i, DateTime.Now));
+                Plant plant = new Plant(i, "Plant Boi # " + i, DateTime.Now);
+                plants.Add(plant);
+
+                needsWateringTimers.Add(plant.Id, new Timer((id) =>
+                {
+                    Console.WriteLine("Yo YO");
+                    plant.State = PlantState.ThirstyAF;
+                    plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(plant.Id));
+
+                }, plant.Id, TimeSpan.FromHours(PLANT_ALERT_TIME), TimeSpan.FromHours(PLANT_ALERT_TIME)));
             }
         }
 
@@ -163,7 +170,6 @@ namespace water_mango_api.Services
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
             Task wateringTask = Task.Run(() => WaterPlant(plant, token), token);
-
             
             lock (taskLock)
             {
@@ -192,6 +198,16 @@ namespace water_mango_api.Services
 
             plant.LastWatered = DateTime.Now;
             plant.State = PlantState.Cooldown;
+
+            // change the timer for the plant that was just watered
+            if (needsWateringTimers.ContainsKey(plant.Id))
+            {
+                Timer t = needsWateringTimers.GetValueOrDefault(plant.Id, null);
+                if (t != null)
+                {
+                    t.Change(TimeSpan.FromHours(PLANT_ALERT_TIME), TimeSpan.FromHours(PLANT_ALERT_TIME));
+                }
+            }
 
             // send an event to all clients to update the plant with this id
             plantHub.sendPlantUpdateEvent(new PlantUpdateEvent(plant.Id));
