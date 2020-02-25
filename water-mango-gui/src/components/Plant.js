@@ -46,7 +46,7 @@ function Plant(props) {
         }}
       >
         <Typography>{props.name}</Typography>
-        <img style={{ height: "150px" }} src={plant} />
+        <img alt="ohboi" style={{ height: "150px" }} src={plant} />
         <Typography>
           This is a lovely plant.. Don't water it after midnight...
         </Typography>

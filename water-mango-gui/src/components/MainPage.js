@@ -9,7 +9,6 @@ import { connect } from "../services/event-service";
 
 function MainPage() {
   const [plants, setPlants] = useState([]);
-  const [plantContainer, setPlantContainer] = useState();
 
   // when the component mounts - we fetch the plants using the API
   useEffect(() => {
@@ -30,7 +29,7 @@ function MainPage() {
 
   return (
     <div className="MainPage">
-      <img className="PlantHeader" src={"WaterMango-Logo.png"} />
+      <img alt="ohboi" className="PlantHeader" src={"WaterMango-Logo.png"} />
       {createPlantContainer(plants)}
       <Footer />
     </div>
