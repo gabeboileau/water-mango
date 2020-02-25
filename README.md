@@ -43,8 +43,7 @@
 
 - `ReactiveX` would be a welcomed implementation in the API.
 - There is no persistence integrated with this project. The plant's data is created when the API is started and it's kept only in memory.
-- There is currently no timer/service in place for indicating when a plant has not been watered for 6 hours.
 - The front end receives update events from the backend for individual plants, but we're still updating the entire list. (This could be inefficient with large amounts of data)
 - The GUI is _very_ programmer art.. many appologize.
 - Stopping the watering process is withing a `1 second` interval. So stopping the process isin't exactly in realtime. There is a slight delay depending how you time it. This works fine in most cases.
--
+- The `ReactJS` front-end is built using React's new functional programming using hooks. It's a little odd but really helps to keep the code clean.
