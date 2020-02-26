@@ -36,7 +36,6 @@ namespace water_mango_api
                 builder =>
                 {
                     builder.WithOrigins(
-                            "http://localhost:5001",
                             "http://localhost:5000",
                             "http://localhost:3000",
                             "http://localhost"
